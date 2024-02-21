@@ -1,7 +1,5 @@
-import token.{type Token}
+import ch1/token.{type Token}
 import gleam/int
-import gleam/float
-import gleam/io
 import gleam/string
 
 // pub fn lex(input: String) -> List(Token) {

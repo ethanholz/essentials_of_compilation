@@ -1,7 +1,7 @@
 import gleeunit
 import gleeunit/should
-import lexer
-import token
+import ch1/lexer
+import ch1/token
 
 pub fn main() {
   gleeunit.main()

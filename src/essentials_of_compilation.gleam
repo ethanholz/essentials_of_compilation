@@ -1,8 +1,10 @@
 import gleam/io
 import gleam/string
 import gleam/list.{map}
-import lexer.{lex, new}
-import token.{to_string}
+import ch1/lexer.{lex, new}
+import ch1/parser
+import ch1/interpreter
+import ch1/token.{to_string}
 import simplifile
 
 pub fn read(from: String) -> String {
@@ -17,13 +19,20 @@ pub fn read(from: String) -> String {
 }
 
 pub fn main() {
-  let input = "(+ 1234 1234)"
+  let input = "(- (+ 3 (- 5)))"
   // let assert Ok(data) = simplifile.read(from: input)
   // read(data)
-  lexer.new(input)
-  |> lex
-  |> map(to_string(_))
-  |> io.debug
+  let parsed =
+    lexer.new(input)
+    |> parser.make
+    |> parser.parse
+
+  let interpreted =
+    parsed
+    |> interpreter.interpret
+  let partial =
+    parsed
+    |> interpreter.partial_eval
   // new(input)
   // |> map(to_string(_))
   // |> io.debug

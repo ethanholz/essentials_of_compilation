@@ -1,9 +1,9 @@
 import gleeunit
 import gleeunit/should
-import ast
-import interpreter
-import parser
-import lexer
+import ch1/ast
+import ch1/interpreter
+import ch1/parser
+import ch1/lexer
 
 pub fn main() {
   gleeunit.main()
@@ -24,7 +24,7 @@ pub fn partial_eval_test() {
   interpreter.partial_eval_expression(
     ast.Prim(ast.Add, [
       ast.Prim(ast.Read, []),
-      ast.Prim(ast.Subtract, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
+      ast.Prim(ast.Negate, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
     ]),
   )
   |> should.equal(ast.Prim(ast.Add, [ast.Prim(ast.Read, []), ast.Int(-8)]))
@@ -54,7 +54,7 @@ pub fn partial_eval_complete_test() {
       "",
       ast.Prim(ast.Add, [
         ast.Prim(ast.Read, []),
-        ast.Prim(ast.Subtract, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
+        ast.Prim(ast.Negate, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
       ]),
     )
   let expected =
@@ -70,9 +70,10 @@ pub fn partial_eval_complete_2_test() {
       "",
       ast.Prim(ast.Add, [
         ast.Int(10),
-        ast.Prim(ast.Subtract, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
+        ast.Prim(ast.Negate, [ast.Prim(ast.Add, [ast.Int(5), ast.Int(3)])]),
       ]),
     )
+  interpreter.partial_eval(initial)
   interpreter.interpret(initial)
   |> should.equal(interpreter.interpret(interpreter.partial_eval(initial)))
 }

@@ -1,6 +1,6 @@
-import lexer
-import token
-import ast
+import ch1/lexer
+import ch1/token
+import ch1/ast
 import gleam/io
 
 pub type Parser {

@@ -1,5 +1,4 @@
-import ast
-import gleam/io
+import ch1/ast
 
 pub fn interpret(ast: ast.Ast) {
   intepret_expression(ast.body)
@@ -8,6 +7,8 @@ pub fn interpret(ast: ast.Ast) {
 pub fn intepret_expression(exp) {
   case exp {
     ast.Int(n) -> n
+    // TODO: We can't read from stdin in this context yet
+    ast.Prim(ast.Read, []) -> 10
     ast.Prim(ast.Negate, [exp]) -> -intepret_expression(exp)
     ast.Prim(ast.Subtract, [exp1, exp2]) ->
       intepret_expression(exp1) - intepret_expression(exp2)
@@ -20,7 +21,7 @@ pub fn intepret_expression(exp) {
 pub fn partial_eval_negate(exp) {
   case exp {
     ast.Int(n) -> ast.Int(-n)
-    _ -> ast.Prim(ast.Subtract, [exp])
+    _ -> ast.Prim(ast.Negate, [exp])
   }
 }
 
@@ -42,7 +43,7 @@ pub fn partial_eval_expression(exp) {
   case exp {
     ast.Int(n) -> ast.Int(n)
     ast.Prim(ast.Read, []) -> ast.Prim(ast.Read, [])
-    ast.Prim(ast.Subtract, [exp]) ->
+    ast.Prim(ast.Negate, [exp]) ->
       partial_eval_negate(partial_eval_expression(exp))
     ast.Prim(ast.Subtract, [exp1, exp2]) ->
       partial_eval_subtract(
@@ -55,7 +56,6 @@ pub fn partial_eval_expression(exp) {
         partial_eval_expression(exp2),
       )
     _ -> {
-      io.debug(exp)
       panic("failed")
     }
   }
